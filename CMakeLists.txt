@@ -236,6 +236,7 @@ if(USE_MINIMAL_RAYLIB_MODULES AND USE_RAYLIB)
         # "SUPPORT_MODULE_RSHAPES"
         # "SUPPORT_MODULE_RTEXTURES" 
         # "SUPPORT_MODULE_RTEXT" # needs RTEXTURES to work
+        "SUPPORT_CAMERA_SYSTEM"
         "SUPPORT_MODULE_RMODELS"
         "SUPPORT_MODULE_RAUDIO"
     )
@@ -262,6 +263,7 @@ else()
 
         # used to make sure all modules are turned back on
         set(module_strings
+            "SUPPORT_CAMERA_SYSTEM"
             "SUPPORT_MODULE_RSHAPES"
             "SUPPORT_MODULE_RTEXTURES" 
             "SUPPORT_MODULE_RTEXT"

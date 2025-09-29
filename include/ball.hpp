@@ -1,21 +1,32 @@
 #pragma once
 
 #include <raylib.h>
+#include <raymath.h>
+#include <btBulletDynamicsCommon.h>
 #include <string>
 
+#include "physics.hpp"
 #include "config.h"
 
 #define URI_SOUND_SPLAT "splat1.wav"
 
-class Ball {
-    Sound sound;
-    Color color = RED;
-    Vector2 position = { -100.0f, -100.0f };
-    int count = 0;
+#define BALL_MAX_SPEED 50.0f
+#define BALL_ACCELERATION 8.0f
+#define BALL_BREAK_FORCE 20.0f
 
+class Ball {
+    Model sphere = { 0 };
+    Texture2D texture;
+    btRigidBody* collision;
+    Sound sound;
+    Vector3 position = { 0 };
+    Matrix transform = { 0 };
+    Color color = RED;
+    
     public:
-        void Load();
+        ~Ball(){}
+        void Load(Physics& bullet);
         void Render() const;
-        const int Update();
+        const std::pair<Vector3, Vector3> Update(Physics& bullet, Vector3 cameraPos);
         void Unload();
 };

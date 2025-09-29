@@ -3,15 +3,20 @@
 #include <btBulletDynamicsCommon.h>
 
 class Physics {
-    btDefaultCollisionConfiguration* collisionConfiguration;
+    btDefaultCollisionConfiguration* configuration;
     btCollisionDispatcher* dispatcher;
-    btBroadphaseInterface* overlappingPairCache;
+    btBroadphaseInterface* overlaps;
     btSequentialImpulseConstraintSolver* solver;
-    btDiscreteDynamicsWorld* dynamicsWorld;
-    btAlignedObjectArray<btCollisionShape*> collisionShapes;
+    btDiscreteDynamicsWorld* world;
+    btAlignedObjectArray<btCollisionShape*> collisions;
 
+    
     public:
+        btRigidBody* sphere;
+        ~Physics(){}
         void Load();
+        btRigidBody* CreateSphere();
+        void CreateGround();
         void Update();
         void Unload();
 };
