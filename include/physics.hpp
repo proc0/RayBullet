@@ -10,9 +10,9 @@ class Physics {
     btDiscreteDynamicsWorld* world;
     btAlignedObjectArray<btCollisionShape*> collisions;
 
+    btRigidBody* sphere;
     
     public:
-        btRigidBody* sphere;
         ~Physics(){}
         void Load();
         btRigidBody* CreateSphere();

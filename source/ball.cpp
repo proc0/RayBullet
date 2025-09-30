@@ -17,10 +17,15 @@ void Ball::Load(Physics& bullet){
 
         transform = MatrixTranslate(x, y, z);
     }
+
+    // Create scene objects
+    sphere = LoadModel("resource/soccerball.glb");
+    texture = LoadTexture("resource/soccertext.jpg");
+    sphere.materials[0].maps[0].texture = texture; 
 }
 
 void Ball::Render() const {
-    DrawSphere(position, 1.0f, color);
+    DrawModel(sphere, position, 1.0f, WHITE);
 }
 
 const std::pair<Vector3, Vector3> Ball::Update(Physics& bullet, Vector3 cameraPos) {
@@ -69,14 +74,19 @@ const std::pair<Vector3, Vector3> Ball::Update(Physics& bullet, Vector3 cameraPo
 
         Vector3 ballDelta = (Vector3){ x: x - transform.m12, y: y - transform.m13, z: z - transform.m14 };
         transform = MatrixMultiply(QuaternionToMatrix(quatRot2), MatrixTranslate(x, y, z));
+        sphere.transform = transform;
         Vector3 ballPos = (Vector3){ x: transform.m12, y: transform.m13, z: transform.m14 };
 
         position = ballPos;
         return std::make_pair(ballPos, ballDelta);
     }
+
+    return std::make_pair(position, (Vector3){ 0, 0, 0 });
 }
 
 void Ball::Unload(){
     delete collision;
     UnloadSound(sound);
+    UnloadTexture(texture);
+    UnloadModel(sphere);
 }

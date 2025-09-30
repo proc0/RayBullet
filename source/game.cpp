@@ -1,15 +1,17 @@
 #include "game.hpp"
 
-const int Game::Update(){
+void Game::Update(){
     physics.Update();
-    float rotDeg = -135*DEG2RAD*GetMouseDelta().x*0.003f;
-    CameraYaw(&camera, rotDeg, true);
+    // float rotDeg = -135*DEG2RAD*GetMouseDelta().x*0.003f;
+    // CameraYaw(&camera, rotDeg, true);
 
     const std::pair<Vector3, Vector3> ballResult = ball.Update(physics, camera.position);
 
     camera.target = ballResult.first;
-    camera.position += ballResult.second;
-    camera.position.y = 10.0f;
+    // camera.position += ballResult.second;
+    // camera.position.y = 10.0f;
+
+    UpdateCamera(&camera, CAMERA_THIRD_PERSON);
 }
 
 #if __EMSCRIPTEN__
@@ -28,8 +30,9 @@ void Game::Render() const {
     static int PADDING = 30; // set padding to avoid scrollbar and browser edge overlap
     SetWindowSize(getBrowserWidth() - PADDING, getBrowserHeight() - PADDING);
 #endif
-    BeginDrawing();
 
+    BeginDrawing();
+    ClearBackground(RAYWHITE);
     BeginMode3D(camera);
 
     DrawMesh(meshPlane, materialPlane, MatrixIdentity());
@@ -48,6 +51,7 @@ void Game::Load() {
     physics.CreateGround();
     meshPlane = GenMeshPlane(300, 300, 1, 1);
     materialPlane = LoadMaterialDefault();
+    materialPlane.maps[0].color = GRAY;
 
     // Camera setup
     camera = (Camera3D) {

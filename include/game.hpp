@@ -27,6 +27,6 @@ class Game {
         static void Loop(void *self);
         void Render() const;
         void Run();
-        const int Update();
+        void Update();
         void Unload();
 };
