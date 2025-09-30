@@ -17,10 +17,10 @@ class Game {
     Physics physics;
     Ball ball;
     
-    Camera3D camera;
+    Camera camera;
     Mesh meshPlane;
     Material materialPlane;
-
+    
     public:
         ~Game(){}
         void Load();

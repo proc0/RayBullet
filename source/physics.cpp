@@ -13,6 +13,8 @@ void Physics::Load() {
 	world = new btDiscreteDynamicsWorld(dispatcher, overlaps, solver, configuration);
 	// world settings
 	world->setGravity(btVector3(0, -10, 0));
+
+	CreateGround();
 }
 
 void Physics::CreateGround() {

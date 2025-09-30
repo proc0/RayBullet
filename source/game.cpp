@@ -5,13 +5,16 @@ void Game::Update(){
     // float rotDeg = -135*DEG2RAD*GetMouseDelta().x*0.003f;
     // CameraYaw(&camera, rotDeg, true);
 
-    const std::pair<Vector3, Vector3> ballResult = ball.Update(physics, camera.position);
-
-    camera.target = ballResult.first;
+    std::pair<Vector3, Vector3> ballResult = ball.Update(physics, camera.position);
+    // const Vector3 cameraOffset = { 0, 10, 10 };
+    // camera.position = Vector3MoveTowards(camera.position, Vector3Add(ballResult.first, cameraOffset), 5.0f * GetFrameTime());
+    // camera.target = ballResult.first;
     // camera.position += ballResult.second;
+    camera.position += ballResult.second;
     // camera.position.y = 10.0f;
 
-    UpdateCamera(&camera, CAMERA_THIRD_PERSON);
+    // UpdateCamera(&camera, CAMERA_CUSTOM);
+    // UpdateCameraPro(&camera, ballResult.second, (Vector3){ 0, 0, 0}, 0);
 }
 
 #if __EMSCRIPTEN__
@@ -48,7 +51,6 @@ void Game::Load() {
     physics.Load();
     ball.Load(physics);
 
-    physics.CreateGround();
     meshPlane = GenMeshPlane(300, 300, 1, 1);
     materialPlane = LoadMaterialDefault();
     materialPlane.maps[0].color = GRAY;
@@ -62,7 +64,7 @@ void Game::Load() {
         .projection = CAMERA_PERSPECTIVE,
     };
 
-    UpdateCamera(&camera, CAMERA_THIRD_PERSON);
+    // UpdateCamera(&camera, CAMERA_THIRD_PERSON);
 }
 
 void Game::Unload(){

@@ -20,6 +20,7 @@ void Ball::Load(Physics& bullet){
 
     // Create scene objects
     sphere = LoadModel("resource/soccerball.glb");
+    sphere.transform = transform;
     texture = LoadTexture("resource/soccertext.jpg");
     sphere.materials[0].maps[0].texture = texture; 
 }
@@ -28,7 +29,7 @@ void Ball::Render() const {
     DrawModel(sphere, position, 1.0f, WHITE);
 }
 
-const std::pair<Vector3, Vector3> Ball::Update(Physics& bullet, Vector3 cameraPos) {
+std::pair<Vector3, Vector3> Ball::Update(Physics& bullet, Vector3 cameraPos) {
     
     Vector3 forwardZ = Vector3Subtract(position, cameraPos);
     forwardZ.y = position.y;
@@ -57,31 +58,27 @@ const std::pair<Vector3, Vector3> Ball::Update(Physics& bullet, Vector3 cameraPo
         collision->applyForce(btVector3(fwdX.x*BALL_ACCELERATION, 0, fwdX.z*BALL_ACCELERATION), btVector3(0, 0, 0));
     }
 
-    if (collision->getMotionState()) {
-        btTransform trans;
-        collision->getMotionState()->getWorldTransform(trans);
-        float x = float(trans.getOrigin().getX());
-        float y = float(trans.getOrigin().getY());
-        float z = float(trans.getOrigin().getZ());
+    btTransform trans;
+    collision->getMotionState()->getWorldTransform(trans);
+    float x = float(trans.getOrigin().getX());
+    float y = float(trans.getOrigin().getY());
+    float z = float(trans.getOrigin().getZ());
 
-        btQuaternion quatRot = trans.getRotation();
-        Quaternion quatRot2 = (Quaternion){
-            x: quatRot.getX(),
-            y: quatRot.getY(),
-            z: quatRot.getZ(),
-            w: quatRot.getW(),
-        };
+    btQuaternion quatRot = trans.getRotation();
+    Quaternion quatRot2 = (Quaternion){
+        x: quatRot.getX(),
+        y: quatRot.getY(),
+        z: quatRot.getZ(),
+        w: quatRot.getW(),
+    };
 
-        Vector3 ballDelta = (Vector3){ x: x - transform.m12, y: y - transform.m13, z: z - transform.m14 };
-        transform = MatrixMultiply(QuaternionToMatrix(quatRot2), MatrixTranslate(x, y, z));
-        sphere.transform = transform;
-        Vector3 ballPos = (Vector3){ x: transform.m12, y: transform.m13, z: transform.m14 };
+    transform = MatrixMultiply(QuaternionToMatrix(quatRot2), MatrixTranslate(x, y, z));
+    Vector3 ballDelta = (Vector3){ x: x - transform.m12, y: y - transform.m13, z: z - transform.m14 };
+    sphere.transform = transform;
+    Vector3 ballPos = (Vector3){ x: transform.m12, y: transform.m13, z: transform.m14 };
+    position = ballPos;
 
-        position = ballPos;
-        return std::make_pair(ballPos, ballDelta);
-    }
-
-    return std::make_pair(position, (Vector3){ 0, 0, 0 });
+    return std::make_pair(ballPos, ballDelta);
 }
 
 void Ball::Unload(){
